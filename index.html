@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APEX SPORTS | Next-Gen Sports Prediction & Betting Platform</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#e6fff4',
+                            100: '#b3ffe0',
+                            400: '#00ff87',
+                            500: '#00e575',
+                            600: '#00b85c',
+                            900: '#004220',
+                            accent: '#00E5FF',
+                            dark: '#0B0F19',
+                            card: '#131B2E',
+                            border: '#1E293B',
+                        }
+                    },
+                    animation: {
+                        'pulse-glow': 'pulseGlow 2s infinite alternate',
+                        'float': 'float 6s ease-in-out infinite',
+                        'shimmer': 'shimmer 2.5s infinite linear',
+                    },
+                    keyframes: {
+                        pulseGlow: {
+                            '0%': { boxShadow: '0 0 15px rgba(0, 255, 135, 0.2)' },
+                            '100%': { boxShadow: '0 0 30px rgba(0, 255, 135, 0.6)' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        },
+                        shimmer: {
+                            '0%': { transform: 'translateX(-100%)' },
+                            '100%': { transform: 'translateX(100%)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            background-color: #070A11;
+            color: #F1F5F9;
+            overflow-x: hidden;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #070A11;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1E293B;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00ff87;
+        }
+
+        /* Glassmorphism utility classes */
+        .glass-card {
+            background: rgba(19, 27, 46, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+        }
+        
+        .glass-card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card-hover:hover {
+            transform: translateY(-4px);
+            border-color: rgba(0, 255, 135, 0.3);
+            box-shadow: 0 12px 30px -10px rgba(0, 255, 135, 0.15);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #FFFFFF 0%, #A5B4FC 50%, #00FF87 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .text-gradient-accent {
+            background: linear-gradient(135deg, #00FF87 0%, #00E5FF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .odds-btn {
+            transition: all 0.2s ease;
+        }
+        .odds-btn:hover, .odds-btn.active {
+            background: linear-gradient(135deg, rgba(0, 255, 135, 0.2) 0%, rgba(0, 229, 255, 0.2) 100%);
+            border-color: #00FF87;
+            color: #00FF87;
+        }
+        
+        /* Custom stadium overlay mesh */
+        .stadium-bg {
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(0, 255, 135, 0.12) 0%, transparent 60%),
+                radial-gradient(circle at 80% 50%, rgba(0, 229, 255, 0.08) 0%, transparent 50%),
+                linear-gradient(180deg, rgba(7, 10, 17, 0.4) 0%, #070A11 100%);
+        }
+    </style>
+</head>
+<body class="font-sans antialiased selection:bg-brand-400 selection:text-black">
+
+    <!-- HEADER -->
+    <header id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-brand-dark/80 backdrop-blur-md border-b border-slate-800/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- Brand Logo -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-400 to-brand-accent p-0.5 shadow-lg shadow-brand-400/20 group-hover:scale-105 transition-transform">
+                    <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
+                        <i class="fa-solid font-bold fa-bolt text-brand-400 text-lg"></i>
+                    </div>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-xl font-extrabold tracking-wider text-white flex items-center">
+                        APEX<span class="text-brand-400 ml-1">SPORTS</span>
+                    </span>
+                    <span class="text-[10px] uppercase tracking-widest text-slate-400 font-semibold -mt-1">PREDICTION TECH</span>
+                </div>
+            </a>
+
+            <!-- Desktop Navigation Links -->
+            <nav class="hidden md:flex items-center gap-8">
+                <a href="#home" class="text-sm font-medium text-slate-200 hover:text-brand-400 transition-colors">Home</a>
+                <a href="#live-betting" class="text-sm font-medium text-slate-300 hover:text-brand-400 transition-colors flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span> Live Betting
+                </a>
+                <a href="#how-it-works" class="text-sm font-medium text-slate-300 hover:text-brand-400 transition-colors">How It Works</a>
+                <a href="#sports" class="text-sm font-medium text-slate-300 hover:text-brand-400 transition-colors">Sports</a>
+                <a href="#features" class="text-sm font-medium text-slate-300 hover:text-brand-400 transition-colors">Features</a>
+                <a href="#about" class="text-sm font-medium text-slate-300 hover:text-brand-400 transition-colors">About</a>
+                <a href="#faq" class="text-sm font-medium text-slate-300 hover:text-brand-400 transition-colors">FAQ</a>
+            </nav>
+
+            <!-- CTA Actions & Slip Toggle -->
+            <div class="hidden lg:flex items-center gap-4">
+                <button onclick="toggleBetSlip()" class="relative p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-brand-400 transition-all flex items-center gap-2 text-xs font-semibold">
+                    <i class="fa-solid fa-receipt text-brand-400"></i>
+                    <span>Bet Slip</span>
+                    <span id="slip-badge" class="bg-brand-400 text-slate-950 px-1.5 py-0.5 rounded-full font-bold text-[10px]">0</span>
+                </button>
+                <a href="#contact" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-400 to-brand-accent text-slate-950 font-bold text-sm shadow-lg shadow-brand-400/20 hover:shadow-brand-400/40 hover:scale-[1.02] active:scale-[0.98] transition-all">
+                    Get Started
+                </a>
+            </div>
+
+            <!-- Mobile Hamburger Menu Button -->
+            <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="md:hidden p-2 text-slate-300 hover:text-white text-xl">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-950/95 border-b border-slate-800 px-6 py-6 space-y-4 backdrop-blur-xl">
+            <a href="#home" onclick="toggleMobileMenu()" class="block text-base font-medium text-slate-200 hover:text-brand-400">Home</a>
+            <a href="#live-betting" onclick="toggleMobileMenu()" class="block text-base font-medium text-slate-300 hover:text-brand-400">Live Betting</a>
+            <a href="#how-it-works" onclick="toggleMobileMenu()" class="block text-base font-medium text-slate-300 hover:text-brand-400">How It Works</a>
+            <a href="#sports" onclick="toggleMobileMenu()" class="block text-base font-medium text-slate-300 hover:text-brand-400">Sports</a>
+            <a href="#features" onclick="toggleMobileMenu()" class="block text-base font-medium text-slate-300 hover:text-brand-400">Features</a>
+            <a href="#about" onclick="toggleMobileMenu()" class="block text-base font-medium text-slate-300 hover:text-brand-400">About</a>
+            <a href="#faq" onclick="toggleMobileMenu()" class="block text-base font-medium text-slate-300 hover:text-brand-400">FAQ</a>
+            <a href="#contact" onclick="toggleMobileMenu()" class="block text-base font-medium text-slate-300 hover:text-brand-400">Contact</a>
+            <div class="pt-4 flex flex-col gap-3">
+                <button onclick="toggleBetSlip(); toggleMobileMenu();" class="w-full py-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-200 font-semibold flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-receipt text-brand-400"></i> View Bet Slip (<span id="mobile-slip-count">0</span>)
+                </button>
+                <a href="#contact" onclick="toggleMobileMenu()" class="w-full text-center py-3 rounded-xl bg-gradient-to-r from-brand-400 to-brand-accent text-slate-950 font-bold">
+                    Get Started
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- FLOATING INTERACTIVE BET SLIP DRAWER -->
+    <div id="bet-slip-drawer" class="fixed inset-y-0 right-0 w-full sm:w-96 bg-slate-950 border-l border-slate-800 z-50 transform translate-x-full transition-transform duration-300 ease-in-out shadow-2xl flex flex-col">
+        <!-- Drawer Header -->
+        <div class="p-5 border-b border-slate-800 flex items-center justify-between bg-slate-900/60">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-ticket text-brand-400 text-lg"></i>
+                <h3 class="font-bold text-lg text-white">Interactive Bet Slip</h3>
+            </div>
+            <button onclick="toggleBetSlip()" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- Bet Selections Container -->
+        <div id="bet-slip-items" class="flex-1 overflow-y-auto p-4 space-y-3">
+            <!-- Empty state -->
+            <div id="empty-slip-msg" class="h-full flex flex-col items-center justify-center text-center p-6 text-slate-500">
+                <i class="fa-solid fa-gamepad text-4xl mb-3 text-slate-700"></i>
+                <p class="text-sm font-medium">Your slip is currently empty.</p>
+                <p class="text-xs text-slate-600 mt-1">Select odds from any live or upcoming match to create your wager preview.</p>
+            </div>
+        </div>
+
+        <!-- Drawer Footer / Calculator -->
+        <div class="p-5 border-t border-slate-800 bg-slate-900/80 space-y-4">
+            <div>
+                <div class="flex justify-between text-xs text-slate-400 mb-1">
+                    <span>Wager Amount ($)</span>
+                    <span class="text-slate-300 font-mono">Min $5.00</span>
+                </div>
+                <div class="relative">
+                    <span class="absolute left-3 top-2.5 text-slate-400 font-bold">$</span>
+                    <input type="number" id="wager-amount" value="50" min="5" oninput="updateBetSlipTotals()" class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-8 pr-4 py-2 text-white font-bold font-mono focus:outline-none focus:border-brand-400">
+                </div>
+            </div>
+
+            <div class="space-y-1.5 text-sm pt-2 border-t border-slate-800/80">
+                <div class="flex justify-between text-slate-400">
+                    <span>Total Odds</span>
+                    <span id="slip-total-odds" class="text-white font-mono font-bold">1.00</span>
+                </div>
+                <div class="flex justify-between text-slate-400">
+                    <span>Est. Payout</span>
+                    <span id="slip-est-payout" class="text-brand-400 font-mono font-extrabold text-base">$0.00</span>
+                </div>
+            </div>
+
+            <button onclick="placeDemoBet()" class="w-full py-3 rounded-xl bg-gradient-to-r from-brand-400 to-brand-accent text-slate-950 font-bold text-sm shadow-lg shadow-brand-400/20 hover:shadow-brand-400/40 transition-all flex items-center justify-center gap-2">
+                <span>Place Wager Demo</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main class="pt-20">
+
+        <!-- HERO SECTION -->
+        <section id="home" class="relative pt-12 pb-24 lg:pt-20 lg:pb-32 overflow-hidden stadium-bg">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="grid lg:grid-cols-12 gap-12 items-center">
+                    
+                    <!-- Left Hero Text -->
+                    <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-400/10 border border-brand-400/30 text-brand-400 text-xs font-semibold uppercase tracking-wider">
+                            <span class="w-2 h-2 rounded-full bg-brand-400 animate-pulse"></span> Next-Gen Sports Betting & Analytics
+                        </div>
+                        
+                        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.1]">
+                            Predict the Game.<br>
+                            <span class="text-gradient-accent">Play With Confidence.</span>
+                        </h1>
+                        
+                        <p class="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                            A modern sports prediction platform built for fans who want a simple, engaging way to predict game outcomes, track real-time odds, and follow the action with total precision.
+                        </p>
+
+                        <!-- Hero CTAs -->
+                        <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+                            <a href="#live-betting" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-brand-400 to-brand-accent text-slate-950 font-extrabold text-base shadow-xl shadow-brand-400/25 hover:shadow-brand-400/40 hover:scale-[1.02] active:scale-[0.98] transition-all text-center flex items-center justify-center gap-2">
+                                <span>Get Started Now</span>
+                                <i class="fa-solid fa-bolt"></i>
+                            </a>
+                            <a href="#how-it-works" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-slate-900/90 border border-slate-700 text-white font-bold text-base hover:bg-slate-800 hover:border-slate-600 transition-all text-center flex items-center justify-center gap-2">
+                                <span>Explore How It Works</span>
+                                <i class="fa-solid fa-circle-play text-brand-400"></i>
+                            </a>
+                        </div>
+
+                        <!-- Trust Message -->
+                        <div class="pt-6 border-t border-slate-800/80 flex items-center justify-center lg:justify-start gap-3 text-slate-400 text-xs font-medium">
+                            <i class="fa-solid fa-shield-halved text-brand-400 text-sm"></i>
+                            <span>Built for sports fans. Designed for a smarter prediction experience.</span>
+                        </div>
+                    </div>
+
+                    <!-- Right Hero Visual Dashboard Mockup -->
+                    <div class="lg:col-span-5 relative">
+                        <!-- Glow Backing -->
+                        <div class="absolute -inset-1 bg-gradient-to-r from-brand-400 to-brand-accent rounded-3xl blur-2xl opacity-20 animate-pulse-glow"></div>
+                        
+                        <div class="relative glass-card rounded-2xl p-5 border border-slate-700/80 shadow-2xl">
+                            <!-- Card Top Toolbar -->
+                            <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-3 h-3 rounded-full bg-red-500"></span>
+                                    <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
+                                    <span class="w-3 h-3 rounded-full bg-green-500"></span>
+                                </div>
+                                <div class="flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-[11px] text-brand-400 font-mono">
+                                    <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span> LIVE SIMULATOR
+                                </div>
+                            </div>
+
+                            <!-- Featured Live Match Widget inside Mockup -->
+                            <div class="mt-4 p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-4">
+                                <div class="flex items-center justify-between text-xs text-slate-400">
+                                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-football text-brand-400"></i> NFL Championship</span>
+                                    <span class="font-mono text-red-400 font-bold">4th Qtr 02:15</span>
+                                </div>
+
+                                <!-- Teams Showcase -->
+                                <div class="grid grid-cols-3 items-center text-center py-2">
+                                    <!-- Home Team -->
+                                    <div class="space-y-1">
+                                        <div class="w-12 h-12 mx-auto rounded-xl bg-red-600/20 border border-red-500/30 flex items-center justify-center font-black text-red-400 text-lg">
+                                            KC
+                                        </div>
+                                        <div class="text-xs font-bold text-white">Chiefs</div>
+                                        <div class="text-[10px] text-slate-400">27 Pts</div>
+                                    </div>
+                                    <!-- Score -->
+                                    <div>
+                                        <div class="text-2xl font-black text-white font-mono">27 - 24</div>
+                                        <div class="text-[10px] uppercase tracking-widest text-brand-400 font-bold mt-1">WIN PROBABILITY</div>
+                                        <!-- Animated Probability Meter -->
+                                        <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mt-1.5">
+                                            <div class="bg-gradient-to-r from-brand-400 to-brand-accent h-full w-[62%]"></div>
+                                        </div>
+                                    </div>
+                                    <!-- Away Team -->
+                                    <div class="space-y-1">
+                                        <div class="w-12 h-12 mx-auto rounded-xl bg-amber-600/20 border border-amber-500/30 flex items-center justify-center font-black text-amber-400 text-lg">
+                                            SF
+                                        </div>
+                                        <div class="text-xs font-bold text-white">49ers</div>
+                                        <div class="text-[10px] text-slate-400">24 Pts</div>
+                                    </div>
+                                </div>
+
+                                <!-- Live Betting Options Inside Mockup -->
+                                <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800/80">
+                                    <button onclick="addBetSelection('KC Chiefs Moneyline', 1.85)" class="p-2.5 rounded-lg bg-slate-950 border border-slate-800 hover:border-brand-400 text-left transition-all group">
+                                        <div class="text-[10px] text-slate-400">Chiefs Win</div>
+                                        <div class="flex justify-between items-center text-xs font-bold text-white group-hover:text-brand-400">
+                                            <span>Moneyline</span>
+                                            <span class="text-brand-400 font-mono">+185</span>
+                                        </div>
+                                    </button>
+                                    <button onclick="addBetSelection('SF 49ers Moneyline', 2.10)" class="p-2.5 rounded-lg bg-slate-950 border border-slate-800 hover:border-brand-400 text-left transition-all group">
+                                        <div class="text-[10px] text-slate-400">49ers Win</div>
+                                        <div class="flex justify-between items-center text-xs font-bold text-white group-hover:text-brand-400">
+                                            <span>Moneyline</span>
+                                            <span class="text-brand-400 font-mono">+210</span>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Live Floating Stats Pill -->
+                            <div class="mt-4 flex items-center justify-between text-xs px-3 py-2 rounded-lg bg-brand-400/10 border border-brand-400/20 text-slate-300">
+                                <span class="flex items-center gap-2"><i class="fa-solid fa-chart-line text-brand-400"></i> AI Match Confidence</span>
+                                <span class="font-mono font-bold text-brand-400">89.4% Accurate</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- LIVE BETTING & MATCHES SECTION -->
+        <section id="live-betting" class="py-20 border-t border-slate-800/80 bg-slate-950/50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+                    <div>
+                        <div class="text-brand-400 text-xs font-extrabold uppercase tracking-widest mb-1">REAL-TIME ODDS</div>
+                        <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Live & Upcoming Matches</h2>
+                    </div>
+
+                    <!-- Sports Category Filter Tabs -->
+                    <div class="flex flex-wrap gap-2" id="sports-tabs">
+                        <button onclick="filterMatches('all')" class="sport-tab active px-4 py-2 rounded-xl text-xs font-bold bg-brand-400 text-slate-950 transition-all">All Sports</button>
+                        <button onclick="filterMatches('football')" class="sport-tab px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-300 hover:bg-slate-800 transition-all">Football</button>
+                        <button onclick="filterMatches('basketball')" class="sport-tab px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-300 hover:bg-slate-800 transition-all">Basketball</button>
+                        <button onclick="filterMatches('soccer')" class="sport-tab px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-300 hover:bg-slate-800 transition-all">Soccer</button>
+                        <button onclick="filterMatches('baseball')" class="sport-tab px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-slate-300 hover:bg-slate-800 transition-all">Baseball</button>
+                    </div>
+                </div>
+
+                <!-- Match Cards Grid -->
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="matches-grid">
+                    
+                    <!-- Match 1 (Football) -->
+                    <div class="match-card glass-card glass-card-hover rounded-2xl p-5 border border-slate-800 space-y-4" data-category="football">
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="text-slate-400 flex items-center gap-1.5"><i class="fa-solid fa-football text-brand-400"></i> NFL • Week 14</span>
+                            <span class="px-2 py-0.5 rounded bg-red-500/20 text-red-400 font-bold font-mono">LIVE Q3</span>
+                        </div>
+                        
+                        <div class="space-y-3 py-2">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-lg bg-blue-600/20 border border-blue-500/30 flex items-center justify-center font-bold text-blue-400 text-xs">DAL</div>
+                                    <span class="font-bold text-white text-sm">Dallas Cowboys</span>
+                                </div>
+                                <span class="font-mono font-bold text-lg text-white">21</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-lg bg-green-600/20 border border-green-500/30 flex items-center justify-center font-bold text-green-400 text-xs">PHI</div>
+                                    <span class="font-bold text-white text-sm">Philadelphia Eagles</span>
+                                </div>
+                                <span class="font-mono font-bold text-lg text-white">17</span>
+                            </div>
+                        </div>
+
+                        <!-- Odds Grid -->
+                        <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800/80">
+                            <button onclick="addBetSelection('Dallas Cowboys Win', 1.75)" class="odds-btn p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-center">
+                                <div class="text-[10px] text-slate-400">Dallas</div>
+                                <div class="text-xs font-bold font-mono text-brand-400">1.75</div>
+                            </button>
+                            <button onclick="addBetSelection('Philadelphia Eagles Win', 2.15)" class="odds-btn p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-center">
+                                <div class="text-[10px] text-slate-400">Philadelphia</div>
+                                <div class="text-xs font-bold font-mono text-brand-400">2.15</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Match 2 (Basketball) -->
+                    <div class="match-card glass-card glass-card-hover rounded-2xl p-5 border border-slate-800 space-y-4" data-category="basketball">
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="text-slate-400 flex items-center gap-1.5"><i class="fa-solid fa-basketball text-amber-400"></i> NBA Regular Season</span>
+                            <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-bold font-mono">20:00 EST</span>
+                        </div>
+                        
+                        <div class="space-y-3 py-2">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-lg bg-purple-600/20 border border-purple-500/30 flex items-center justify-center font-bold text-purple-400 text-xs">LAL</div>
+                                    <span class="font-bold text-white text-sm">LA Lakers</span>
+                                </div>
+                                <span class="font-mono font-bold text-sm text-slate-500">-</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-lg bg-green-600/20 border border-green-500/30 flex items-center justify-center font-bold text-green-400 text-xs">BOS</div>
+                                    <span class="font-bold text-white text-sm">Boston Celtics</span>
+                                </div>
+                                <span class="font-mono font-bold text-sm text-slate-500">-</span>
+                            </div>
+                        </div>
+
+                        <!-- Odds Grid -->
+                        <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800/80">
+                            <button onclick="addBetSelection('LA Lakers Win', 2.40)" class="odds-btn p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-center">
+                                <div class="text-[10px] text-slate-400">Lakers</div>
+                                <div class="text-xs font-bold font-mono text-brand-400">2.40</div>
+                            </button>
+                            <button onclick="addBetSelection('Boston Celtics Win', 1.60)" class="odds-btn p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-center">
+                                <div class="text-[10px] text-slate-400">Celtics</div>
+                                <div class="text-xs font-bold font-mono text-brand-400">1.60</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Match 3 (Soccer) -->
+                    <div class="match-card glass-card glass-card-hover rounded-2xl p-5 border border-slate-800 space-y-4" data-category="soccer">
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="text-slate-400 flex items-center gap-1.5"><i class="fa-solid fa-futbol text-emerald-400"></i> UEFA Champions League</span>
+                            <span class="px-2 py-0.5 rounded bg-red-500/20 text-red-400 font-bold font-mono">LIVE 82'</span>
+                        </div>
+                        
+                        <div class="space-y-3 py-2">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-lg bg-sky-600/20 border border-sky-500/30 flex items-center justify-center font-bold text-sky-400 text-xs">MCI</div>
+                                    <span class="font-bold text-white text-sm">Man City</span>
+                                </div>
+                                <span class="font-mono font-bold text-lg text-white">2</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center font-bold text-white text-xs">RMA</div>
+                                    <span class="font-bold text-white text-sm">Real Madrid</span>
+                                </div>
+                                <span class="font-mono font-bold text-lg text-white">2</span>
+                            </div>
+                        </div>
+
+                        <!-- Odds Grid (Soccer includes Draw option) -->
+                        <div class="grid grid-cols-3 gap-1.5 pt-2 border-t border-slate-800/80">
+                            <button onclick="addBetSelection('Man City Win', 2.00)" class="odds-btn p-2 rounded-xl bg-slate-900 border border-slate-800 text-center">
+                                <div class="text-[10px] text-slate-400">Man City</div>
+                                <div class="text-xs font-bold font-mono text-brand-400">2.00</div>
+                            </button>
+                            <button onclick="addBetSelection('MCI vs RMA Draw', 3.10)" class="odds-btn p-2 rounded-xl bg-slate-900 border border-slate-800 text-center">
+                                <div class="text-[10px] text-slate-400">Draw</div>
+                                <div class="text-xs font-bold font-mono text-brand-400">3.10</div>
+                            </button>
+                            <button onclick="addBetSelection('Real Madrid Win', 3.40)" class="odds-btn p-2 rounded-xl bg-slate-900 border border-slate-800 text-center">
+                                <div class="text-[10px] text-slate-400">Real Madrid</div>
+                                <div class="text-xs font-bold font-mono text-brand-400">3.40</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Match 4 (Baseball) -->
+                    <div class="match-card glass-card glass-card-hover rounded-2xl p-5 border border-slate-800 space-y-4" data-category="baseball">
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="text-slate-400 flex items-center gap-1.5"><i class="fa-solid fa-baseball text-red-400"></i> MLB World Series</span>
+                            <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-bold font-mono">Tomorrow</span>
+                        </div>
+                        
+                        <div class="space-y-3 py-2">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-lg bg-blue-700/20 border border-blue-600/30 flex items-center justify-center font-bold text-blue-400 text-xs">LAD</div>
+                                    <span class="font-bold text-white text-sm">LA Dodgers</span>
+                                </div>
+                                <span class="font-mono font-bold text-sm text-slate-500">-</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-lg bg-blue-900/20 border border-blue-800/30 flex items-center justify-center font-bold text-sky-300 text-xs">NYY</div>
+                                    <span class="font-bold text-white text-sm">NY Yankees</span>
+                                </div>
+                                <span class="font-mono font-bold text-sm text-slate-500">-</span>
+                            </div>
+                        </div>
+
+                        <!-- Odds Grid -->
+                        <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800/80">
+                            <button onclick="addBetSelection('LA Dodgers Win', 1.80)" class="odds-btn p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-center">
+                                <div class="text-[10px] text-slate-400">Dodgers</div>
+                                <div class="text-xs font-bold font-mono text-brand-400">1.80</div>
+                            </button>
+                            <button onclick="addBetSelection('NY Yankees Win', 2.05)" class="odds-btn p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-center">
+                                <div class="text-[10px] text-slate-400">Yankees</div>
+                                <div class="text-xs font-bold font-mono text-brand-400">2.05</div>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- HOW IT WORKS SECTION -->
+        <section id="how-it-works" class="py-24 border-t border-slate-800/80 relative">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-16 space-y-3">
+                    <div class="text-brand-400 text-xs font-extrabold uppercase tracking-widest">SIMPLE 4-STEP PROCESS</div>
+                    <h2 class="text-3xl sm:text-5xl font-extrabold text-white">How APEX Sports Works</h2>
+                    <p class="text-slate-400 text-base">Designed from the ground up for seamless game predictions and instant action.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    
+                    <!-- Step 1 -->
+                    <div class="glass-card glass-card-hover rounded-2xl p-6 border border-slate-800 relative group">
+                        <div class="text-4xl font-black text-slate-800 group-hover:text-brand-400/20 transition-colors absolute top-4 right-4">01</div>
+                        <div class="w-12 h-12 rounded-xl bg-brand-400/10 border border-brand-400/30 flex items-center justify-center text-brand-400 text-xl mb-6">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Choose a Game</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            Browse upcoming and live sporting events across football, basketball, soccer, baseball, and tennis.
+                        </p>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="glass-card glass-card-hover rounded-2xl p-6 border border-slate-800 relative group">
+                        <div class="text-4xl font-black text-slate-800 group-hover:text-brand-400/20 transition-colors absolute top-4 right-4">02</div>
+                        <div class="w-12 h-12 rounded-xl bg-brand-accent/10 border border-brand-accent/30 flex items-center justify-center text-brand-accent text-xl mb-6">
+                            <i class="fa-solid fa-bullseye"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Make Prediction</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            Analyze AI win-probability models, team stats, and choose the outcome or team you believe will win.
+                        </p>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="glass-card glass-card-hover rounded-2xl p-6 border border-slate-800 relative group">
+                        <div class="text-4xl font-black text-slate-800 group-hover:text-brand-400/20 transition-colors absolute top-4 right-4">03</div>
+                        <div class="w-12 h-12 rounded-xl bg-emerald-400/10 border border-emerald-400/30 flex items-center justify-center text-emerald-400 text-xl mb-6">
+                            <i class="fa-solid fa-ticket"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Place Your Wager</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            Enter your wager amount, lock in competitive odds, and confirm your prediction ticket instantly.
+                        </p>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="glass-card glass-card-hover rounded-2xl p-6 border border-slate-800 relative group">
+                        <div class="text-4xl font-black text-slate-800 group-hover:text-brand-400/20 transition-colors absolute top-4 right-4">04</div>
+                        <div class="w-12 h-12 rounded-xl bg-purple-400/10 border border-purple-400/30 flex items-center justify-center text-purple-400 text-xl mb-6">
+                            <i class="fa-solid fa-trophy"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Follow the Result</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            Track play-by-play scores in real time and view automatic outcome settlements upon completion.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- SPORTS SECTION -->
+        <section id="sports" class="py-24 border-t border-slate-800/80 bg-slate-950/60">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+                    <div>
+                        <div class="text-brand-400 text-xs font-extrabold uppercase tracking-widest mb-1">GLOBAL LEAGUES</div>
+                        <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Popular Sports Categories</h2>
+                    </div>
+                    <p class="text-slate-400 text-sm max-w-md mt-2 md:mt-0">
+                        Access hundreds of daily markets across all major professional and collegiate sports.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
+                    
+                    <!-- Football Card -->
+                    <div class="glass-card glass-card-hover rounded-2xl p-5 text-center border border-slate-800 group cursor-pointer" onclick="filterMatches('football')">
+                        <div class="w-14 h-14 mx-auto rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-2xl mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-football"></i>
+                        </div>
+                        <h3 class="font-bold text-white text-base mb-1">Football</h3>
+                        <p class="text-xs text-slate-400 mb-3">NFL, NCAAF, XFL</p>
+                        <span class="text-[11px] font-bold text-brand-400 group-hover:underline flex items-center justify-center gap-1">
+                            View Games <i class="fa-solid fa-chevron-right text-[9px]"></i>
+                        </span>
+                    </div>
+
+                    <!-- Basketball Card -->
+                    <div class="glass-card glass-card-hover rounded-2xl p-5 text-center border border-slate-800 group cursor-pointer" onclick="filterMatches('basketball')">
+                        <div class="w-14 h-14 mx-auto rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-400 text-2xl mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-basketball"></i>
+                        </div>
+                        <h3 class="font-bold text-white text-base mb-1">Basketball</h3>
+                        <p class="text-xs text-slate-400 mb-3">NBA, EuroLeague, NCAA</p>
+                        <span class="text-[11px] font-bold text-brand-400 group-hover:underline flex items-center justify-center gap-1">
+                            View Games <i class="fa-solid fa-chevron-right text-[9px]"></i>
+                        </span>
+                    </div>
+
+                    <!-- Soccer Card -->
+                    <div class="glass-card glass-card-hover rounded-2xl p-5 text-center border border-slate-800 group cursor-pointer" onclick="filterMatches('soccer')">
+                        <div class="w-14 h-14 mx-auto rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-2xl mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-futbol"></i>
+                        </div>
+                        <h3 class="font-bold text-white text-base mb-1">Soccer</h3>
+                        <p class="text-xs text-slate-400 mb-3">EPL, UCL, LaLiga, MLS</p>
+                        <span class="text-[11px] font-bold text-brand-400 group-hover:underline flex items-center justify-center gap-1">
+                            View Games <i class="fa-solid fa-chevron-right text-[9px]"></i>
+                        </span>
+                    </div>
+
+                    <!-- Baseball Card -->
+                    <div class="glass-card glass-card-hover rounded-2xl p-5 text-center border border-slate-800 group cursor-pointer" onclick="filterMatches('baseball')">
+                        <div class="w-14 h-14 mx-auto rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 text-2xl mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-baseball"></i>
+                        </div>
+                        <h3 class="font-bold text-white text-base mb-1">Baseball</h3>
+                        <p class="text-xs text-slate-400 mb-3">MLB, NPB, KBO</p>
+                        <span class="text-[11px] font-bold text-brand-400 group-hover:underline flex items-center justify-center gap-1">
+                            View Games <i class="fa-solid fa-chevron-right text-[9px]"></i>
+                        </span>
+                    </div>
+
+                    <!-- Tennis / Hockey Card -->
+                    <div class="glass-card glass-card-hover rounded-2xl p-5 text-center border border-slate-800 group cursor-pointer" onclick="filterMatches('all')">
+                        <div class="w-14 h-14 mx-auto rounded-2xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 text-2xl mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-hockey-puck"></i>
+                        </div>
+                        <h3 class="font-bold text-white text-base mb-1">Hockey & More</h3>
+                        <p class="text-xs text-slate-400 mb-3">NHL, ATP Tennis, MMA</p>
+                        <span class="text-[11px] font-bold text-brand-400 group-hover:underline flex items-center justify-center gap-1">
+                            View Games <i class="fa-solid fa-chevron-right text-[9px]"></i>
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- FEATURES / SERVICES -->
+        <section id="features" class="py-24 border-t border-slate-800/80">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-16 space-y-3">
+                    <div class="text-brand-400 text-xs font-extrabold uppercase tracking-widest">ENTERPRISE-GRADE ARCHITECTURE</div>
+                    <h2 class="text-3xl sm:text-5xl font-extrabold text-white">Built for High Performance</h2>
+                    <p class="text-slate-400 text-base">Explore the advanced technological feature stack driving the APEX platform.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    
+                    <!-- Feature 1 -->
+                    <div class="glass-card glass-card-hover rounded-2xl p-6 border border-slate-800 space-y-4">
+                        <div class="w-12 h-12 rounded-xl bg-brand-400/10 border border-brand-400/20 flex items-center justify-center text-brand-400 text-xl">
+                            <i class="fa-solid fa-chart-pie"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Sports Predictions</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            Algorithmic data feeds providing calculated probabilities and sharp odds lines across every match.
+                        </p>
+                    </div>
+
+                    <!-- Feature 2 -->
+                    <div class="glass-card glass-card-hover rounded-2xl p-6 border border-slate-800 space-y-4">
+                        <div class="w-12 h-12 rounded-xl bg-brand-accent/10 border border-brand-accent/20 flex items-center justify-center text-brand-accent text-xl">
+                            <i class="fa-solid fa-gauge-high"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Simple User Experience</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            Clean, clutter-free user interface engineered to minimize friction and speed up wager execution.
+                        </p>
+                    </div>
+
+                    <!-- Feature 3 -->
+                    <div class="glass-card glass-card-hover rounded-2xl p-6 border border-slate-800 space-y-4">
+                        <div class="w-12 h-12 rounded-xl bg-purple-400/10 border border-purple-400/20 flex items-center justify-center text-purple-400 text-xl">
+                            <i class="fa-solid fa-database"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Game & Team Analytics</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            Deep analytical breakdowns, historical head-to-head records, and player stats at your fingertips.
+                        </p>
+                    </div>
+
+                    <!-- Feature 4 -->
+                    <div class="glass-card glass-card-hover rounded-2xl p-6 border border-slate-800 space-y-4">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-400/10 border border-emerald-400/20 flex items-center justify-center text-emerald-400 text-xl">
+                            <i class="fa-solid fa-lock"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Secure Account Experience</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            Enterprise-level encryption, multi-factor authentication, and safe transaction architecture.
+                        </p>
+                    </div>
+
+                    <!-- Feature 5 -->
+                    <div class="glass-card glass-card-hover rounded-2xl p-6 border border-slate-800 space-y-4">
+                        <div class="w-12 h-12 rounded-xl bg-amber-400/10 border border-amber-400/20 flex items-center justify-center text-amber-400 text-xl">
+                            <i class="fa-solid fa-clock-rotate-left"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Prediction Tracking</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            Comprehensive history tracking, yield calculation, and real-time open wager status alerts.
+                        </p>
+                    </div>
+
+                    <!-- Feature 6 -->
+                    <div class="glass-card glass-card-hover rounded-2xl p-6 border border-slate-800 space-y-4">
+                        <div class="w-12 h-12 rounded-xl bg-pink-400/10 border border-pink-400/20 flex items-center justify-center text-pink-400 text-xl">
+                            <i class="fa-solid fa-mobile-screen-button"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Mobile-First Platform</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">
+                            Fully responsive web experience optimized for smooth operation across desktop, tablet, and smartphones.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- WHY CHOOSE US & ABOUT -->
+        <section id="about" class="py-24 border-t border-slate-800/80 bg-slate-950/70 relative">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid lg:grid-cols-12 gap-12 items-center">
+                    
+                    <!-- Left Stats Graphics -->
+                    <div class="lg:col-span-6 space-y-6">
+                        <div class="glass-card rounded-3xl p-8 border border-slate-800 relative overflow-hidden">
+                            <!-- Background accent glow -->
+                            <div class="absolute top-0 right-0 w-64 h-64 bg-brand-400/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                            <div class="text-xs font-extrabold text-brand-400 uppercase tracking-widest mb-2">SYSTEM PERFORMANCE</div>
+                            <h3 class="text-2xl sm:text-3xl font-extrabold text-white mb-6">Built Around the Sports Fan</h3>
+
+                            <!-- Stats Grid -->
+                            <div class="grid grid-cols-2 gap-4 mb-8">
+                                <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+                                    <div class="text-3xl font-black text-brand-400 font-mono">99.9%</div>
+                                    <div class="text-xs text-slate-400 mt-1 font-medium">Uptime Reliability</div>
+                                </div>
+                                <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+                                    <div class="text-3xl font-black text-brand-accent font-mono">&lt; 0.2s</div>
+                                    <div class="text-xs text-slate-400 mt-1 font-medium">Execution Speed</div>
+                                </div>
+                                <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+                                    <div class="text-3xl font-black text-white font-mono">500k+</div>
+                                    <div class="text-xs text-slate-400 mt-1 font-medium">Active Predictions</div>
+                                </div>
+                                <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+                                    <div class="text-3xl font-black text-emerald-400 font-mono">24 / 7</div>
+                                    <div class="text-xs text-slate-400 mt-1 font-medium">Live Event Feeds</div>
+                                </div>
+                            </div>
+
+                            <p class="text-xs text-slate-400 leading-relaxed italic border-t border-slate-800/80 pt-4">
+                                APEX Sports simplifies complex sportsbook mechanics into an effortless, ultra-fast web software platform.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Right Key Points -->
+                    <div class="lg:col-span-6 space-y-8">
+                        <div>
+                            <div class="text-brand-400 text-xs font-extrabold uppercase tracking-widest mb-1">A BETTER WAY TO EXPERIENCE SPORTS</div>
+                            <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Designed for Clarity & Speed</h2>
+                        </div>
+
+                        <div class="space-y-6">
+                            <!-- Point 1 -->
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-brand-400/10 border border-brand-400/30 flex items-center justify-center text-brand-400 font-bold shrink-0">
+                                    <i class="fa-solid fa-check"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-bold text-white">Simple & Intuitive</h4>
+                                    <p class="text-slate-400 text-sm mt-1">Easy-to-understand prediction mechanics without confusing cluttered menus.</p>
+                                </div>
+                            </div>
+
+                            <!-- Point 2 -->
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-brand-accent/10 border border-brand-accent/30 flex items-center justify-center text-brand-accent font-bold shrink-0">
+                                    <i class="fa-solid fa-bolt"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-bold text-white">Fast Execution</h4>
+                                    <p class="text-slate-400 text-sm mt-1">Instant wager placement and rapid live score updates during high-tempo games.</p>
+                                </div>
+                            </div>
+
+                            <!-- Point 3 -->
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-purple-400/10 border border-purple-400/30 flex items-center justify-center text-purple-400 font-bold shrink-0">
+                                    <i class="fa-solid fa-users"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-bold text-white">Engaging Community</h4>
+                                    <p class="text-slate-400 text-sm mt-1">Built to keep fans connected with the live sports outcomes they care about.</p>
+                                </div>
+                            </div>
+
+                            <!-- Point 4 -->
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-400/10 border border-emerald-400/30 flex items-center justify-center text-emerald-400 font-bold shrink-0">
+                                    <i class="fa-solid fa-laptop-code"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-bold text-white">Modern Sports-Tech</h4>
+                                    <p class="text-slate-400 text-sm mt-1">A polished digital experience engineered with modern web standards across all devices.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- TESTIMONIALS SECTION -->
+        <section class="py-24 border-t border-slate-800/80">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto mb-16 space-y-2">
+                    <div class="text-brand-400 text-xs font-extrabold uppercase tracking-widest">USER FEEDBACK</div>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white">What Sports Fans Say</h2>
+                    <p class="text-slate-500 text-xs italic">(Sample demonstration testimonials)</p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8">
+                    
+                    <!-- Testimonial 1 -->
+                    <div class="glass-card rounded-2xl p-6 border border-slate-800 flex flex-col justify-between space-y-4">
+                        <div class="space-y-3">
+                            <div class="text-amber-400 text-xs flex gap-1">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                            </div>
+                            <p class="text-slate-300 text-sm leading-relaxed">
+                                "The interface makes following games and making predictions incredibly simple. It's by far the cleanest sports UI I've tested."
+                            </p>
+                        </div>
+                        <div class="flex items-center gap-3 pt-4 border-t border-slate-800/80">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-brand-400 to-brand-accent flex items-center justify-center text-slate-950 font-bold text-sm">
+                                MT
+                            </div>
+                            <div>
+                                <div class="text-sm font-bold text-white">Marcus T.</div>
+                                <div class="text-xs text-slate-400">Sports Fan</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Testimonial 2 -->
+                    <div class="glass-card rounded-2xl p-6 border border-slate-800 flex flex-col justify-between space-y-4">
+                        <div class="space-y-3">
+                            <div class="text-amber-400 text-xs flex gap-1">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                            </div>
+                            <p class="text-slate-300 text-sm leading-relaxed">
+                                "Clean design, easy navigation, and everything I need in one place. The bet slip calculation engine is instant."
+                            </p>
+                        </div>
+                        <div class="flex items-center gap-3 pt-4 border-t border-slate-800/80">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-400 to-indigo-500 flex items-center justify-center text-white font-bold text-sm">
+                                DR
+                            </div>
+                            <div>
+                                <div class="text-sm font-bold text-white">Daniel R.</div>
+                                <div class="text-xs text-slate-400">Sports Enthusiast</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Testimonial 3 -->
+                    <div class="glass-card rounded-2xl p-6 border border-slate-800 flex flex-col justify-between space-y-4">
+                        <div class="space-y-3">
+                            <div class="text-amber-400 text-xs flex gap-1">
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                            </div>
+                            <p class="text-slate-300 text-sm leading-relaxed">
+                                "A completely different way to stay engaged with the games I follow. High response speeds on mobile devices!"
+                            </p>
+                        </div>
+                        <div class="flex items-center gap-3 pt-4 border-t border-slate-800/80">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-purple-400 to-pink-500 flex items-center justify-center text-white font-bold text-sm">
+                                JR
+                            </div>
+                            <div>
+                                <div class="text-sm font-bold text-white">James R.</div>
+                                <div class="text-xs text-slate-400">Active User</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA BANNER SECTION -->
+        <section class="py-20 relative overflow-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="glass-card rounded-3xl p-10 lg:p-16 border border-brand-400/30 text-center relative overflow-hidden bg-gradient-to-r from-slate-900 via-brand-dark to-slate-900">
+                    <!-- Glowing Background Radial -->
+                    <div class="absolute -inset-1 bg-gradient-to-r from-brand-400/20 to-brand-accent/20 blur-xl opacity-50"></div>
+                    
+                    <div class="relative z-10 space-y-6 max-w-3xl mx-auto">
+                        <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
+                            Ready to Make Your Prediction?
+                        </h2>
+                        <p class="text-slate-300 text-base sm:text-lg">
+                            Follow the games you love and experience a simpler, smarter way to make sports predictions today.
+                        </p>
+
+                        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+                            <a href="#contact" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-brand-400 to-brand-accent text-slate-950 font-extrabold text-base shadow-xl shadow-brand-400/25 hover:scale-[1.02] active:scale-[0.98] transition-all">
+                                Get Started Today
+                            </a>
+                            <a href="#how-it-works" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-slate-950 border border-slate-800 text-white font-bold text-base hover:bg-slate-900 transition-all">
+                                Learn How It Works
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ SECTION -->
+        <section id="faq" class="py-24 border-t border-slate-800/80">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16 space-y-2">
+                    <div class="text-brand-400 text-xs font-extrabold uppercase tracking-widest">GOT QUESTIONS?</div>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Frequently Asked Questions</h2>
+                </div>
+
+                <div class="space-y-4">
+                    
+                    <!-- FAQ 1 -->
+                    <div class="glass-card rounded-2xl border border-slate-800 overflow-hidden transition-all">
+                        <button onclick="toggleFaq(this)" class="w-full p-6 text-left flex justify-between items-center text-white font-bold text-base hover:text-brand-400 transition-colors">
+                            <span>How does the sports prediction platform work?</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform duration-300"></i>
+                        </button>
+                        <div class="faq-answer hidden px-6 pb-6 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50 pt-4">
+                            Users browse upcoming matches, analyze live odds and match metrics, select team outcomes or point spreads, enter demo or active wagers, and follow settled results on an automated scorecard.
+                        </div>
+                    </div>
+
+                    <!-- FAQ 2 -->
+                    <div class="glass-card rounded-2xl border border-slate-800 overflow-hidden transition-all">
+                        <button onclick="toggleFaq(this)" class="w-full p-6 text-left flex justify-between items-center text-white font-bold text-base hover:text-brand-400 transition-colors">
+                            <span>What sports and leagues are available?</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform duration-300"></i>
+                        </button>
+                        <div class="faq-answer hidden px-6 pb-6 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50 pt-4">
+                            We support major global leagues including American Football (NFL), Basketball (NBA), Soccer (EPL, UCL, LaLiga), Baseball (MLB), Ice Hockey (NHL), ATP Tennis, and Select MMA Events.
+                        </div>
+                    </div>
+
+                    <!-- FAQ 3 -->
+                    <div class="glass-card rounded-2xl border border-slate-800 overflow-hidden transition-all">
+                        <button onclick="toggleFaq(this)" class="w-full p-6 text-left flex justify-between items-center text-white font-bold text-base hover:text-brand-400 transition-colors">
+                            <span>How do I create an account?</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform duration-300"></i>
+                        </button>
+                        <div class="faq-answer hidden px-6 pb-6 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50 pt-4">
+                            Creating an account requires a valid email address and age verification. Simply click 'Get Started', fill in your profile details, and verify your email to access prediction features.
+                        </div>
+                    </div>
+
+                    <!-- FAQ 4 -->
+                    <div class="glass-card rounded-2xl border border-slate-800 overflow-hidden transition-all">
+                        <button onclick="toggleFaq(this)" class="w-full p-6 text-left flex justify-between items-center text-white font-bold text-base hover:text-brand-400 transition-colors">
+                            <span>How are match predictions settled?</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform duration-300"></i>
+                        </button>
+                        <div class="faq-answer hidden px-6 pb-6 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50 pt-4">
+                            Predictions are automatically calculated and settled instantly using official league data feeds upon match completion.
+                        </div>
+                    </div>
+
+                    <!-- FAQ 5 -->
+                    <div class="glass-card rounded-2xl border border-slate-800 overflow-hidden transition-all">
+                        <button onclick="toggleFaq(this)" class="w-full p-6 text-left flex justify-between items-center text-white font-bold text-base hover:text-brand-400 transition-colors">
+                            <span>Is the platform mobile-friendly?</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform duration-300"></i>
+                        </button>
+                        <div class="faq-answer hidden px-6 pb-6 text-slate-400 text-sm leading-relaxed border-t border-slate-800/50 pt-4">
+                            Yes! APEX is a Progressive Web Architecture that adapts perfectly across iOS, Android, tablets, and desktop web browsers without needing separate native store downloads.
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- RESPONSIBLE GAMING BANNER -->
+        <section class="py-8 bg-slate-900 border-y border-slate-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+                    <div class="flex items-center gap-3">
+                        <span class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center font-black text-amber-400 text-sm shrink-0">
+                            21+
+                        </span>
+                        <div>
+                            <h4 class="text-sm font-bold text-white">Responsible Gaming & Compliance</h4>
+                            <p class="text-xs text-slate-400">Please gamble responsibly. If you or someone you know has a gambling problem, call 1-800-GAMBLER for support.</p>
+                        </div>
+                    </div>
+                    <div class="text-xs text-slate-500 font-mono">
+                        DEMO PLATFORM MOCKUP
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT SECTION -->
+        <section id="contact" class="py-24 stadium-bg">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid lg:grid-cols-12 gap-12 items-center">
+                    
+                    <!-- Left Info -->
+                    <div class="lg:col-span-5 space-y-6">
+                        <div class="text-brand-400 text-xs font-extrabold uppercase tracking-widest">GET IN TOUCH</div>
+                        <h2 class="text-3xl sm:text-5xl font-black text-white leading-tight">
+                            Let's Talk About the Future of Sports Prediction
+                        </h2>
+                        <p class="text-slate-300 text-sm leading-relaxed">
+                            Have questions about our software architecture, partnership opportunities, or custom enterprise deployments? Reach out to our team.
+                        </p>
+
+                        <div class="space-y-4 pt-4">
+                            <div class="flex items-center gap-4 text-sm text-slate-300">
+                                <div class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-brand-400">
+                                    <i class="fa-solid fa-envelope"></i>
+                                </div>
+                                <span>contact@apex-sports-demo.com</span>
+                            </div>
+                            <div class="flex items-center gap-4 text-sm text-slate-300">
+                                <div class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-brand-400">
+                                    <i class="fa-solid fa-phone"></i>
+                                </div>
+                                <span>+1 (800) 555-APEX</span>
+                            </div>
+                            <div class="flex items-center gap-4 text-sm text-slate-300">
+                                <div class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-brand-400">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                </div>
+                                <span>Tech District, San Francisco, CA</span>
+                            </div>
+                        </div>
+
+                        <!-- Social Links -->
+                        <div class="flex items-center gap-3 pt-2">
+                            <a href="#" class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-brand-400 hover:border-brand-400 flex items-center justify-center transition-all">
+                                <i class="fa-brands fa-x-twitter"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-brand-400 hover:border-brand-400 flex items-center justify-center transition-all">
+                                <i class="fa-brands fa-instagram"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-brand-400 hover:border-brand-400 flex items-center justify-center transition-all">
+                                <i class="fa-brands fa-linkedin-in"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-brand-400 hover:border-brand-400 flex items-center justify-center transition-all">
+                                <i class="fa-brands fa-facebook-f"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Right Form -->
+                    <div class="lg:col-span-7">
+                        <div class="glass-card rounded-3xl p-8 border border-slate-800 space-y-6">
+                            <h3 class="text-xl font-bold text-white">Send Us a Message</h3>
+                            
+                            <form id="contact-form" onsubmit="handleContactSubmit(event)" class="space-y-4">
+                                <div class="grid sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-semibold text-slate-400 mb-1.5">Your Name</label>
+                                        <input type="text" required placeholder="John Doe" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-400">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-slate-400 mb-1.5">Email Address</label>
+                                        <input type="email" required placeholder="john@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-400">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-400 mb-1.5">Phone Number</label>
+                                    <input type="tel" placeholder="+1 (555) 000-0000" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-400">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-400 mb-1.5">Message</label>
+                                    <textarea rows="4" required placeholder="Tell us about your project or inquiry..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brand-400 resize-none"></textarea>
+                                </div>
+
+                                <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-brand-400 to-brand-accent text-slate-950 font-bold text-sm shadow-lg shadow-brand-400/20 hover:shadow-brand-400/40 transition-all flex items-center justify-center gap-2">
+                                    <span>Send Message</span>
+                                    <i class="fa-solid fa-paper-plane"></i>
+                                </button>
+                            </form>
+
+                            <div id="form-success-msg" class="hidden p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-medium text-center">
+                                <i class="fa-solid fa-circle-check text-base mb-1 block"></i>
+                                Thank you! Your message has been received. Our team will contact you shortly.
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-950 border-t border-slate-800/80 pt-16 pb-12 text-slate-400 text-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8 pb-12 border-b border-slate-800/80">
+                
+                <!-- Brand Column -->
+                <div class="col-span-2 space-y-4">
+                    <a href="#" class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-400 to-brand-accent p-0.5">
+                            <div class="w-full h-full bg-slate-950 rounded-[6px] flex items-center justify-center">
+                                <i class="fa-solid fa-bolt text-brand-400 text-sm"></i>
+                            </div>
+                        </div>
+                        <span class="text-lg font-extrabold text-white">APEX<span class="text-brand-400">SPORTS</span></span>
+                    </a>
+                    <p class="text-xs text-slate-400 max-w-sm leading-relaxed">
+                        A modern sports tech software suite offering intelligent game prediction mechanics, live sports analytics, and smooth digital betting UI concepts.
+                    </p>
+                </div>
+
+                <!-- Column 1: Navigation -->
+                <div class="space-y-3">
+                    <h4 class="text-xs font-extrabold uppercase tracking-widest text-white">Platform</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><a href="#how-it-works" class="hover:text-brand-400 transition-colors">How It Works</a></li>
+                        <li><a href="#sports" class="hover:text-brand-400 transition-colors">Sports Categories</a></li>
+                        <li><a href="#live-betting" class="hover:text-brand-400 transition-colors">Live Betting</a></li>
+                        <li><a href="#features" class="hover:text-brand-400 transition-colors">Software Features</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 2: Company -->
+                <div class="space-y-3">
+                    <h4 class="text-xs font-extrabold uppercase tracking-widest text-white">Company</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><a href="#about" class="hover:text-brand-400 transition-colors">About APEX</a></li>
+                        <li><a href="#faq" class="hover:text-brand-400 transition-colors">FAQ</a></li>
+                        <li><a href="#contact" class="hover:text-brand-400 transition-colors">Contact</a></li>
+                        <li><a href="#" class="hover:text-brand-400 transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-brand-400 transition-colors">Terms of Service</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 3: Connect -->
+                <div class="space-y-3">
+                    <h4 class="text-xs font-extrabold uppercase tracking-widest text-white">Connect</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><a href="#" class="hover:text-brand-400 transition-colors">X (Twitter)</a></li>
+                        <li><a href="#" class="hover:text-brand-400 transition-colors">Instagram</a></li>
+                        <li><a href="#" class="hover:text-brand-400 transition-colors">LinkedIn</a></li>
+                        <li><a href="#" class="hover:text-brand-400 transition-colors">Facebook</a></li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- Bottom Disclaimer & Copyright -->
+            <div class="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+                <div>
+                    © 2026 APEX Sports Tech Platform. All Rights Reserved.
+                </div>
+                <div class="text-center md:text-right text-[11px] max-w-xl">
+                    Disclaimer: This website is a demonstration UI software mockup created for sports prediction and betting software showcase purposes.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        let betSelections = [];
+
+        // Toggle Bet Slip Sidebar Drawer
+        function toggleBetSlip() {
+            const drawer = document.getElementById('bet-slip-drawer');
+            drawer.classList.toggle('translate-x-full');
+        }
+
+        // Toggle Mobile Navigation Drawer
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Add Selection to Interactive Bet Slip
+        function addBetSelection(title, odds) {
+            // Check if item already exists
+            const existingIndex = betSelections.findIndex(item => item.title === title);
+            if (existingIndex > -1) {
+                // Remove if clicked again
+                betSelections.splice(existingIndex, 1);
+            } else {
+                betSelections.push({ title, odds });
+            }
+
+            renderBetSlip();
+            
+            // Open slip drawer on desktop selection
+            const drawer = document.getElementById('bet-slip-drawer');
+            if (drawer.classList.contains('translate-x-full')) {
+                drawer.classList.remove('translate-x-full');
+            }
+        }
+
+        // Render Bet Slip Items in Drawer
+        function renderBetSlip() {
+            const itemsContainer = document.getElementById('bet-slip-items');
+            const slipBadge = document.getElementById('slip-badge');
+            const mobileSlipCount = document.getElementById('mobile-slip-count');
+
+            slipBadge.innerText = betSelections.length;
+            mobileSlipCount.innerText = betSelections.length;
+
+            if (betSelections.length === 0) {
+                itemsContainer.innerHTML = `
+                    <div id="empty-slip-msg" class="h-full flex flex-col items-center justify-center text-center p-6 text-slate-500">
+                        <i class="fa-solid fa-gamepad text-4xl mb-3 text-slate-700"></i>
+                        <p class="text-sm font-medium">Your slip is currently empty.</p>
+                        <p class="text-xs text-slate-600 mt-1">Select odds from any live or upcoming match to create your wager preview.</p>
+                    </div>
+                `;
+            } else {
+                let html = '';
+                betSelections.forEach((item, index) => {
+                    html += `
+                        <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between gap-3">
+                            <div>
+                                <div class="text-xs font-bold text-white">${item.title}</div>
+                                <div class="text-[11px] text-slate-400 mt-0.5">Selection Match</div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="font-mono font-bold text-brand-400 text-sm">${item.odds.toFixed(2)}</span>
+                                <button onclick="removeBetSelection(${index})" class="text-slate-500 hover:text-red-400 text-xs">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                itemsContainer.innerHTML = html;
+            }
+
+            updateBetSlipTotals();
+        }
+
+        // Remove Selection from Bet Slip
+        function removeBetSelection(index) {
+            betSelections.splice(index, 1);
+            renderBetSlip();
+        }
+
+        // Calculate Totals & Potential Payout
+        function updateBetSlipTotals() {
+            const wagerInput = document.getElementById('wager-amount');
+            const wagerVal = parseFloat(wagerInput.value) || 0;
+            const totalOddsSpan = document.getElementById('slip-total-odds');
+            const estPayoutSpan = document.getElementById('slip-est-payout');
+
+            if (betSelections.length === 0) {
+                totalOddsSpan.innerText = '1.00';
+                estPayoutSpan.innerText = '$0.00';
+                return;
+            }
+
+            // Multiply odds for parlay accumulator simulation
+            let combinedOdds = betSelections.reduce((acc, curr) => acc * curr.odds, 1);
+            let payout = wagerVal * combinedOdds;
+
+            totalOddsSpan.innerText = combinedOdds.toFixed(2);
+            estPayoutSpan.innerText = '$' + payout.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        // Simulate Demo Wager Placement
+        function placeDemoBet() {
+            if (betSelections.length === 0) {
+                showToast("Please add at least one match prediction to your slip.");
+                return;
+            }
+
+            const wagerVal = parseFloat(document.getElementById('wager-amount').value) || 0;
+            if (wagerVal < 5) {
+                showToast("Minimum wager demo amount is $5.00.");
+                return;
+            }
+
+            showToast("Demo Wager Placed Successfully! Ticket #APX-" + Math.floor(100000 + Math.random() * 900000));
+            betSelections = [];
+            renderBetSlip();
+            toggleBetSlip();
+        }
+
+        // Custom Non-Blocking Toast Message Component
+        function showToast(message) {
+            let toast = document.createElement('div');
+            toast.className = 'fixed bottom-5 left-1/2 transform -translate-x-1/2 z-50 bg-brand-400 text-slate-950 font-bold px-6 py-3 rounded-xl shadow-2xl text-xs sm:text-sm flex items-center gap-2 transition-all duration-300';
+            toast.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${message}`;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Filter Live Matches by Category
+        function filterMatches(category) {
+            const cards = document.querySelectorAll('.match-card');
+            const tabs = document.querySelectorAll('.sport-tab');
+
+            tabs.forEach(tab => {
+                tab.classList.remove('bg-brand-400', 'text-slate-950');
+                tab.classList.add('bg-slate-900', 'text-slate-300');
+            });
+
+            event.currentTarget.classList.remove('bg-slate-900', 'text-slate-300');
+            event.currentTarget.classList.add('bg-brand-400', 'text-slate-950');
+
+            cards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Toggle Expandable FAQ Accordion Items
+        function toggleFaq(button) {
+            const answer = button.nextElementSibling;
+            const icon = button.querySelector('i');
+            
+            if (answer.classList.contains('hidden')) {
+                answer.classList.remove('hidden');
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                answer.classList.add('hidden');
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // Handle Contact Form Submission
+        function handleContactSubmit(event) {
+            event.preventDefault();
+            document.getElementById('contact-form').reset();
+            const msg = document.getElementById('form-success-msg');
+            msg.classList.remove('hidden');
+            setTimeout(() => {
+                msg.classList.add('hidden');
+            }, 5000);
+        }
+
+        window.onload = function() {
+            renderBetSlip();
+        };
+    </script>
+</body>
+</html>
